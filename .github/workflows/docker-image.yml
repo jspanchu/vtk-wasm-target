@@ -39,9 +39,8 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        push: true
         load: true
-        tags: test
+        tags: jspanchu/vtk-wasm-target:test
 
     - name: Test # Need to extend this.
       id: test
