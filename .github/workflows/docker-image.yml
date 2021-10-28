@@ -45,7 +45,7 @@ jobs:
     - name: Test # Need to extend this.
       id: test
       run: |
-        docker run --rm ${{ env.TEST_TAG }}
+        docker run --rm jspanchu/vtk-wasm-target:test
 
     - name: Push docker image
       id: push
