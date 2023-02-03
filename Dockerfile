@@ -1,16 +1,28 @@
-FROM dockcross/web-wasm:latest
-LABEL maintainer="Jaswant Panchumart jspanchu@gmail.com"
-WORKDIR /vtk-wasm-project
-RUN git clone --progress --verbose https://github.com/jspanchu/vtk-cmake-incantations.git && \
-    git clone --progress --verbose https://gitlab.kitware.com/jspanchu/vtk.git src && \
-    cd src && \
-    git checkout implement-keycode-sdl2 && \
-    git submodule update --init --recursive && \
-    cd .. && \
-    mkdir build && \
-    ./vtk-cmake-incantations/wasm-emscripten.sh ./src ./build && \
-    cd ./build && \
-    ninja && \
-    ninja install && \
-    cd .. && \
-    rm -rf src build vtk-cmake-incantations
+FROM dockcross/web-wasm:20230116-670f7f7
+LABEL maintainer="Jaswant Panchumarti jaswant.panchumarti@kitware.com"
+
+WORKDIR /vtk-wasm
+RUN git clone --progress --verbose https://gitlab.kitware.com/jaswant.panchumarti/vtk.git src
+
+WORKDIR /vtk-wasm/src
+RUN git submodule update --init --recursive
+RUN git config --global user.email "jaswant.panchumarti@kitware.com" && \
+    git config --global user.name "Jaswant Panchumarti" && \
+    git checkout gles-polydata-mapper && \
+    git rebase origin/webassembly-build-ci && \
+    git rebase origin/implement-sdl2-keycodes && \
+    git rebase origin/add-sdl2-overrides
+RUN .gitlab/ci/sccache.sh
+RUN cmake --version && \
+    ninja --version && \
+    export PATH=/vtk-wasm/src/.gitlab:$PATH && \
+    sccache --version
+RUN export CMAKE_CONFIGURATION=webassembly && \
+    export PATH=/vtk-wasm/src/.gitlab:$PATH && \
+    ctest -VV -S .gitlab/ci/ctest_configure.cmake
+RUN export CMAKE_CONFIGURATION=webassembly && \
+    export PATH=/vtk-wasm/src/.gitlab:$PATH && \
+    ctest -VV -S .gitlab/ci/ctest_build.cmake
+
+RUN cmake --install build --prefix /vtk-wasm/install
+RUN rm -rf /vtk-wasm/src
