@@ -8,10 +8,7 @@ WORKDIR /vtk-wasm/src
 RUN git submodule update --init --recursive
 RUN git config --global user.email "jaswant.panchumarti@kitware.com" && \
     git config --global user.name "Jaswant Panchumarti" && \
-    git checkout gles-polydata-mapper && \
-    git rebase origin/webassembly-build-ci && \
-    git rebase origin/implement-sdl2-keycodes && \
-    git rebase origin/add-sdl2-overrides
+    git rebase origin/webassembly-build-ci
 RUN .gitlab/ci/sccache.sh
 RUN cmake --version && \
     ninja --version && \
