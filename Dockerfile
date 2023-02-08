@@ -23,3 +23,5 @@ RUN export CMAKE_CONFIGURATION=webassembly && \
 
 RUN cmake --install build --prefix /vtk-wasm/install
 RUN rm -rf /vtk-wasm/src
+
+ENV VTK_DIR=/vtk-wasm/install/lib/cmake/vtk-9.2
