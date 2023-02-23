@@ -2,10 +2,9 @@ FROM dockcross/web-wasm:20230116-670f7f7
 LABEL maintainer="Jaswant Panchumarti jaswant.panchumarti@kitware.com"
 
 WORKDIR /vtk-wasm
-RUN git clone --progress --verbose --recursive https://gitlab.kitware.com/jaswant.panchumarti/vtk.git src
+RUN git clone --progress --verbose --recursive https://gitlab.kitware.com/vtk/vtk.git src
 
 WORKDIR /vtk-wasm/src
-RUN git checkout webassembly-build-ci
 RUN .gitlab/ci/sccache.sh
 RUN cmake --version && \
     ninja --version && \
