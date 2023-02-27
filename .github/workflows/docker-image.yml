@@ -3,6 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ main ]
+  # Allows manual triggers from actions tab
+  workflow_dispatch:
 
 jobs:
   push_to_dockerhub:
